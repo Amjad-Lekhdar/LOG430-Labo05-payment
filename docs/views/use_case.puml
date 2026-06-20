@@ -1,0 +1,5 @@
+@startuml
+    StoreManagerApplication --> (Créer une transaction de paiement)
+    StoreManagerApplication --> (Voir les détails d'une transaction de paiement)
+    StoreManagerApplication --> (Effectuer un paiement)
+@enduml

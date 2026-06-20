@@ -1,0 +1,32 @@
+@startuml
+package View {
+    [PaymentService] 
+}
+
+package Controller {
+    [PaymentController] 
+}
+
+package WriteModel {
+    [WritePayment] 
+}
+
+package ReadModel {
+    [ReadPayment] 
+}
+
+package Model {
+    [Payment] 
+}
+
+[PaymentService] --> [PaymentController] : Demander la création d'une transaction de paiement
+[PaymentController] --> [WritePayment] : Créer une transaction de paiement
+[WritePayment] --> [PaymentController] : Notifier le Controller
+[PaymentController] --> [PaymentService] : Répondre la requête
+[WritePayment] --> [Payment] : Créer une transaction de paiement
+[Payment] --> [WritePayment] : Notifier le WriteModel
+[PaymentController] --> [ReadPayment] : Chercher une transaction de paiement par ID
+[ReadPayment] --> [PaymentController] : Notifier le Controller
+[ReadPayment] --> [Payment] : Sélectionner une transaction de paiement
+[Payment] --> [ReadPayment] : Notifier le ReadModel
+@enduml

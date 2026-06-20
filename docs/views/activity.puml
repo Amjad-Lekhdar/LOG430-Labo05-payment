@@ -1,0 +1,18 @@
+@startuml 
+start
+
+if (Action?) then (Créer une transaction de paiement)
+  :POST /payments Créer transaction;
+  :Retourner payment_id;
+  
+elseif (Effectuer un paiement) then
+  :Communiquer les données de carte de crédit;
+  :Retourner order_id, payment_id, is_paid;
+  
+else (Consulter une transaction de paiement)
+  :Obtenir détails de une transaction de paiement;
+  :Retourner informations du paiement;
+endif
+
+stop
+@enduml
