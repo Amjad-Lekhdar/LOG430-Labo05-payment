@@ -5,6 +5,7 @@ Auteurs : Gabriel C. Ullmann, Fabio Petrillo, 2025
 """
 import numbers
 import requests
+import config
 from logger import Logger
 from commands.write_payment import create_payment, update_status_to_paid
 from queries.read_payment import get_payment_by_id
@@ -36,13 +37,16 @@ def process_payment(payment_id, credit_card_data):
     # Ensuite, faire la mise à jour de la commande dans le Store Manager (en utilisant l'order_id)
     update_result = update_status_to_paid(payment_id)
     logger.debug(f"Updated order {update_result['order_id']} to paid={update_result}")
+    if not update_result["is_paid"]:
+        raise ValueError(update_result.get("error", "Le paiement n'a pas pu être mis à jour."))
+
+    update_order(update_result["order_id"], update_result["is_paid"])
+
     result = {
         "order_id": update_result["order_id"],
         "payment_id": update_result["payment_id"],
         "is_paid": update_result["is_paid"]
     }
-    # TODO: appelez la méthode correctement
-    update_order(0, False)
 
     return result
     
@@ -54,4 +58,18 @@ def _process_credit_card_payment(payment_data):
 
 def update_order(order_id, is_paid):
     """ Trigger order update once it is paid"""
-    pass
+    if not order_id:
+        raise ValueError("Vous devez indiquer un ID de commande.")
+
+    payload = {
+        "order_id": order_id,
+        "is_paid": is_paid
+    }
+    response = requests.put(
+        config.STORE_MANAGER_ORDERS_URL,
+        json=payload,
+        headers={'Content-Type': 'application/json'},
+        timeout=5
+    )
+    response.raise_for_status()
+    return response.json()

@@ -15,3 +15,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
+STORE_MANAGER_ORDERS_URL = os.getenv(
+    "STORE_MANAGER_ORDERS_URL",
+    "http://api-gateway:8080/store-manager-api/orders",
+)
